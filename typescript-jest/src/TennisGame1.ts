@@ -1,8 +1,8 @@
 import { TennisGame } from './TennisGame';
 
 export class TennisGame1 implements TennisGame {
-  private player1 = new Player()
-  private player2 = new Player()
+  private player1: Player = new Player()
+  private player2: Player = new Player()
 
   constructor(player1Name: string, player2Name: string) {
     this.player1.setName = player1Name;
@@ -54,16 +54,17 @@ export class TennisGame1 implements TennisGame {
     return score;
   }
 
-  displayScore(score: number):string{
+  displayScore(score: number): string{
     if(score == Score.Love) return 'Love';
     else if(score == Score.Fifteen) return 'Fifteen';
     else if(score == Score.Thirty) return 'Thirty';
     else return 'Forty';
   }
 
-  endGame(winner:string):void{
+  endGame(winner:string): void{
     this.player1.resetScore();
     this.player2.resetScore();
+
     if(winner === this.player1.getName)
       this.player1.gameWon();
     else this.player2.gameWon();
@@ -76,7 +77,8 @@ export class TennisGame1 implements TennisGame {
   endSet():void{
     if(this.player1.getGames == 6){
       this.player1.incrementSets();
-    }else this.player2.incrementSets()
+    }else
+      this.player2.incrementSets()
 
     this.player1.resetGames();
     this.player2.resetGames();
@@ -105,18 +107,18 @@ class Player{
   public get getName(){
     return this.name
   }
-  public set setName(name:string){
+  public set setName(name: string){
     this.name = name;
   }
 
-  public incrementScore(){
+  public incrementScore(): void{
     this.score++;
   }
   public get getScore(){
     return this.score;
   }
 
-  public resetScore(){
+  public resetScore(): void{
     this.score = Score.Love;
   }
 
@@ -124,19 +126,19 @@ class Player{
     return this.games;
   }
 
-  public gameWon(){
+  public gameWon(): void{
     this.games++;
   }
 
-  public resetGames():void{
+  public resetGames(): void{
     this.games = 0;
   }
 
-  public get getSets():number{
+  public get getSets(): number{
     return this.sets;
   }
 
-  public incrementSets():void{
+  public incrementSets() : void{
     this.sets++;
   }
 }
