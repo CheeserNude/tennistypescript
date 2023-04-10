@@ -1,35 +1,32 @@
 import { TennisGame } from './TennisGame';
 
 export class TennisGame1 implements TennisGame {
-  private m_score1: number = 0;
-  private m_score2: number = 0;
-  private player1Name: string;
-  private player2Name: string;
+  private player1 = new Player()
+  private player2 = new Player()
 
   constructor(player1Name: string, player2Name: string) {
-    this.player1Name = player1Name;
-    this.player2Name = player2Name;
+    this.player1.setName = player1Name;
+    this.player2.setName = player2Name;
   }
 
   wonPoint(playerName: string): void {
-    if (playerName === 'player1')
-      this.m_score1 += 1;
+    if (playerName === this.player1.getName)
+      this.player1.incrementScore();
     else
-      this.m_score2 += 1;
+      this.player2.incrementScore();
   }
 
   getScore(): string {
-    let score: string = '';
-    let tempScore: number = 0;
-    if (this.m_score1 === this.m_score2) {
-      switch (this.m_score1) {
-        case 0:
+    let score: string;
+    if (this.player1.getScore === this.player2.getScore) {
+      switch (this.player1.getScore) {
+        case Score.Love:
           score = 'Love-All';
           break;
-        case 1:
+        case Score.Fifteen:
           score = 'Fifteen-All';
           break;
-        case 2:
+        case Score.Thirty:
           score = 'Thirty-All';
           break;
         default:
@@ -38,33 +35,108 @@ export class TennisGame1 implements TennisGame {
 
       }
     }
-    else if (this.m_score1 >= 4 || this.m_score2 >= 4) {
-      const minusResult: number = this.m_score1 - this.m_score2;
-      if (minusResult === 1) score = 'Advantage player1';
-      else if (minusResult === -1) score = 'Advantage player2';
-      else if (minusResult >= 2) score = 'Win for player1';
-      else score = 'Win for player2';
-    }
-    else {
-      for (let i = 1; i < 3; i++) {
-        if (i === 1) tempScore = this.m_score1;
-        else { score += '-'; tempScore = this.m_score2; }
-        switch (tempScore) {
-          case 0:
-            score += 'Love';
-            break;
-          case 1:
-            score += 'Fifteen';
-            break;
-          case 2:
-            score += 'Thirty';
-            break;
-          case 3:
-            score += 'Forty';
-            break;
-        }
+    else if (this.player1.getScore > Score.Forty || this.player2.getScore > Score.Forty) {
+      const scoreDifference: number = this.player1.getScore - this.player2.getScore;
+      if (scoreDifference === 1) score = 'Advantage ' + this.player1.getName;
+      else if (scoreDifference >= 2) {
+        score = 'Win for ' + this.player1.getName;
+        this.endGame(this.player1.getName);
+      }
+      else if (scoreDifference === -1) score = 'Advantage ' + this.player2.getName;
+      else {
+        score = 'Win for ' + this.player2.getName;
+        this.endGame(this.player2.getName)
       }
     }
+    else {
+        score = this.displayScore(this.player1.getScore) + '-' + this.displayScore(this.player2.getScore);
+    }
     return score;
+  }
+
+  displayScore(score: number):string{
+    if(score == Score.Love) return 'Love';
+    else if(score == Score.Fifteen) return 'Fifteen';
+    else if(score == Score.Thirty) return 'Thirty';
+    else return 'Forty';
+  }
+
+  endGame(winner:string):void{
+    this.player1.resetScore();
+    this.player2.resetScore();
+    if(winner === this.player1.getName)
+      this.player1.gameWon();
+    else this.player2.gameWon();
+
+    if(this.player1.getGames == 6 || this.player2.getGames == 6){
+      this.endSet();
+    }
+  }
+
+  endSet():void{
+    if(this.player1.getGames == 6){
+      this.player1.incrementSets();
+    }else this.player2.incrementSets()
+
+    this.player1.resetGames();
+    this.player2.resetGames();
+  }
+
+}
+enum Score{
+  Love,
+  Fifteen,
+  Thirty,
+  Forty
+}
+
+class Player{
+  private name: string = "";
+  private score: number;
+  private games: number;
+  private sets: number;
+
+  constructor() {
+    this.score = Score.Love;
+    this.games = 0;
+    this.sets = 0;
+  }
+
+  public get getName(){
+    return this.name
+  }
+  public set setName(name:string){
+    this.name = name;
+  }
+
+  public incrementScore(){
+    this.score++;
+  }
+  public get getScore(){
+    return this.score;
+  }
+
+  public resetScore(){
+    this.score = Score.Love;
+  }
+
+  public get getGames(){
+    return this.games;
+  }
+
+  public gameWon(){
+    this.games++;
+  }
+
+  public resetGames():void{
+    this.games = 0;
+  }
+
+  public get getSets():number{
+    return this.sets;
+  }
+
+  public incrementSets():void{
+    this.sets++;
   }
 }
