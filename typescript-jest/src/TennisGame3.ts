@@ -11,6 +11,10 @@ export class TennisGame3 implements TennisGame {
     this.p2N = p2N;
   }
 
+  getGames():string{
+    return '';
+  }
+
   getScore(): string {
     let s: string;
     if (this.p1 < 4 && this.p2 < 4 && !(this.p1 + this.p2 === 6)) {

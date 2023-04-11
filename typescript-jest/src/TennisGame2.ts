@@ -15,6 +15,10 @@ export class TennisGame2 implements TennisGame {
     this.player2Name = player2Name;
   }
 
+  getGames():string{
+    return '';
+  }
+
   getScore(): string {
     let score: string = '';
     if (this.P1point === this.P2point && this.P1point < 4) {
